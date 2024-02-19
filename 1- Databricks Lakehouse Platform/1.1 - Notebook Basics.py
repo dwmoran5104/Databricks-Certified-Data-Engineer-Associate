@@ -57,6 +57,10 @@ dbutils.help()
 
 # COMMAND ----------
 
+# MAGIC %fs help
+
+# COMMAND ----------
+
 dbutils.fs.help()
 
 # COMMAND ----------
