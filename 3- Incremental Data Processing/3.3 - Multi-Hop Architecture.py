@@ -97,6 +97,11 @@ load_new_data()
 
 # COMMAND ----------
 
+# MAGIC %sql
+# MAGIC describe extended customers_lookup
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC ## Creating Silver Table
 
@@ -178,6 +183,10 @@ load_new_data()
 # COMMAND ----------
 
 load_new_data()
+
+# COMMAND ----------
+
+print(spark.streams.active)
 
 # COMMAND ----------
 

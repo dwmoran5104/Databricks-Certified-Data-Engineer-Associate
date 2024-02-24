@@ -21,7 +21,7 @@ SELECT * FROM customers
 
 -- COMMAND ----------
 
-DESCRIBE customers
+DESCRIBE extended customers
 
 -- COMMAND ----------
 
@@ -119,7 +119,7 @@ SELECT *
 FROM (
   SELECT *, explode(books) AS book 
   FROM orders) o
-INNER JOIN books b
+JOIN books b
 ON o.book.book_id = b.book_id;
 
 SELECT * FROM orders_enriched
@@ -134,6 +134,7 @@ SELECT * FROM orders_enriched
 CREATE OR REPLACE TEMP VIEW orders_updates
 AS SELECT * FROM parquet.`${dataset.bookstore}/orders-new`;
 
+insert OVERWRITE orders
 SELECT * FROM orders 
 UNION 
 SELECT * FROM orders_updates 

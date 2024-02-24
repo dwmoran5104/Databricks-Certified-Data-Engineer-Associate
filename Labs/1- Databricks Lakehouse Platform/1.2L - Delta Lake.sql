@@ -46,7 +46,7 @@ WHERE name = "Eric";
 
 -- COMMAND ----------
 
---------------------
+select * from persons
 
 -- COMMAND ----------
 
@@ -58,6 +58,7 @@ WHERE name = "Eric";
 -- COMMAND ----------
 
 --------------------
+describe history persons
 
 -- COMMAND ----------
 
@@ -69,6 +70,7 @@ WHERE name = "Eric";
 -- COMMAND ----------
 
 --------------------
+describe detail persons2
 
 -- COMMAND ----------
 
@@ -81,7 +83,7 @@ WHERE name = "Eric";
 
 -- COMMAND ----------
 
---------------------
+-- MAGIC %fs ls 'dbfs:/user/hive/warehouse/persons2'
 
 -- COMMAND ----------
 
@@ -92,4 +94,10 @@ WHERE name = "Eric";
 
 -- COMMAND ----------
 
---------------------
+-- MAGIC
+-- MAGIC %fs ls 'dbfs:/user/hive/warehouse/persons/_delta_log'
+
+-- COMMAND ----------
+
+CREATE OR REPLACE TABLE persons2
+  (id INT, name STRING, age INT);

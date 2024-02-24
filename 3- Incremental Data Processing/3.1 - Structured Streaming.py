@@ -35,6 +35,11 @@
 
 # COMMAND ----------
 
+# MAGIC %sql
+# MAGIC describe extended  books_streaming_tmp_vw
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC ## Applying Transformations
 

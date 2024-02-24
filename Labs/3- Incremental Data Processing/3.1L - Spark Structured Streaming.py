@@ -30,15 +30,24 @@
 
 # COMMAND ----------
 
+# MAGIC %sql
+# MAGIC drop table enrollments_tmp_vw
+
+# COMMAND ----------
+
+dbutils.fs.rm("dbfs:/mnt/DE-Associate/checkpoints/school/enrollments_stats/", True)
+
+# COMMAND ----------
+
 dataset_source = f"{dataset_school}/enrollments-json-raw"
 schema_location = "dbfs:/mnt/DE-Associate/checkpoints/school/enrollments_stats"
 
 
 (spark
   .readStream
-  .___________________
-  .___________________
-  .____________________
+  .format("cloudFiles")
+  .option("cloudFiles.format", "json")
+  .option("cloudFiles.schemaLocation", schema_location)
   .load(dataset_source)
   .createOrReplaceTempView("enrollments_tmp_vw"))
 
@@ -52,9 +61,15 @@ schema_location = "dbfs:/mnt/DE-Associate/checkpoints/school/enrollments_stats"
 # COMMAND ----------
 
 # MAGIC %sql
+# MAGIC select * from enrollments_tmp_vw
+
+# COMMAND ----------
+
+# MAGIC %sql
 # MAGIC
 # MAGIC CREATE OR REPLACE TEMPORARY VIEW enrollments_per_student_tmp_vw AS
-# MAGIC SELECT ___________________
+# MAGIC SELECT student_id, count(enroll_id) as enrollment_counts from enrollments_tmp_vw
+# MAGIC group by student_id
 # MAGIC
 
 # COMMAND ----------
@@ -68,11 +83,12 @@ schema_location = "dbfs:/mnt/DE-Associate/checkpoints/school/enrollments_stats"
 
 checkpoint_path = "dbfs:/mnt/DE-Associate/checkpoints/school/enrollments_stats"
 
-query = (spark._________________
-              ._________________
-              ._________________
-              ._________________
-              ._________________
+query = (spark.table('enrollments_per_student_tmp_vw')
+              .writeStream
+              .trigger(processingTime='4 seconds')
+              .option("checkpointLocation", checkpoint_path)
+              .outputMode("complete")
+              .table('enrollment_stats')
         )
 
 # COMMAND ----------
@@ -84,7 +100,7 @@ query = (spark._________________
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC SELECT * FROM enrollments_stats
+# MAGIC SELECT * FROM enrollment_stats
 
 # COMMAND ----------
 
@@ -103,7 +119,7 @@ load_new_json_data()
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC SELECT * FROM enrollments_stats
+# MAGIC SELECT * FROM enrollment_stats
 
 # COMMAND ----------
 

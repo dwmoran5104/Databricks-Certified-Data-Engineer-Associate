@@ -29,6 +29,12 @@ FROM orders
 
 -- COMMAND ----------
 
+select order_id, books, books.quantity from orders
+where books.quantity >= 2
+
+
+-- COMMAND ----------
+
 SELECT order_id, multiple_copies
 FROM (
   SELECT
@@ -69,7 +75,7 @@ RETURN concat("https://www.", split(email, "@")[1])
 -- COMMAND ----------
 
 SELECT email, get_url(email) domain
-FROM customers
+FROM customers where  email is not null
 
 -- COMMAND ----------
 
@@ -99,3 +105,7 @@ FROM customers
 
 DROP FUNCTION get_url;
 DROP FUNCTION site_type;
+
+-- COMMAND ----------
+
+

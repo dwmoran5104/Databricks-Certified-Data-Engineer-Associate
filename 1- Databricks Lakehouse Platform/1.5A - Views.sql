@@ -25,6 +25,18 @@ SHOW TABLES
 
 -- COMMAND ----------
 
+-- Drop table external_default
+DROP TABLE IF EXISTS external_default;
+drop table persons;
+drop table persons2;
+
+
+-- COMMAND ----------
+
+use default
+
+-- COMMAND ----------
+
 -- MAGIC %md
 -- MAGIC ## Creating Stored Views
 
@@ -88,4 +100,18 @@ SHOW TABLES IN global_temp;
 
 -- COMMAND ----------
 
+--show tables in dwm8117_gei7_da_delp_default_location
+--drop table dwm8117_gei7_da_delp_default_location.events_raw
+drop schema dwm8117_gei7_da_delp_pipeline_demo
+
+-- COMMAND ----------
+
 SHOW TABLES
+
+-- COMMAND ----------
+
+
+
+-- COMMAND ----------
+
+drop schema  cinema_custom cascade

@@ -10,7 +10,7 @@ DESCRIBE HISTORY employees
 -- COMMAND ----------
 
 SELECT * 
-FROM employees VERSION AS OF 4
+FROM employees@v4
 
 -- COMMAND ----------
 
@@ -83,7 +83,7 @@ VACUUM employees RETAIN 0 HOURS
 
 -- COMMAND ----------
 
-SET spark.databricks.delta.retentionDurationCheck.enabled = false;
+SET spark.databricks.delta.retentionDurationCheck.enabled = true;
 
 -- COMMAND ----------
 
@@ -95,7 +95,7 @@ VACUUM employees RETAIN 0 HOURS
 
 -- COMMAND ----------
 
-SELECT * FROM employees@v1
+describe history employees
 
 -- COMMAND ----------
 
@@ -114,3 +114,7 @@ SELECT * FROM employees
 -- COMMAND ----------
 
 -- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+
+-- COMMAND ----------
+
+

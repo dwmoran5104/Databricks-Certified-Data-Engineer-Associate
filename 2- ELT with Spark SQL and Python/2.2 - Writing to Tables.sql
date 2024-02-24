@@ -11,7 +11,7 @@
 
 -- COMMAND ----------
 
-CREATE TABLE orders AS
+CREATE or replace TABLE orders AS
 SELECT * FROM parquet.`${dataset.bookstore}/orders`
 
 -- COMMAND ----------
@@ -34,8 +34,12 @@ DESCRIBE HISTORY orders
 
 -- COMMAND ----------
 
-INSERT OVERWRITE orders
+INSERT overwrite  orders
 SELECT * FROM parquet.`${dataset.bookstore}/orders`
+
+-- COMMAND ----------
+
+select count(*) from orders
 
 -- COMMAND ----------
 
@@ -97,3 +101,7 @@ USING books_updates u
 ON b.book_id = u.book_id AND b.title = u.title
 WHEN NOT MATCHED AND u.category = 'Computer Science' THEN 
   INSERT *
+
+-- COMMAND ----------
+
+

@@ -22,6 +22,7 @@
 -- COMMAND ----------
 
 --------------------
+select * from parquet.`${dataset.school}/enrollments`
 
 -- COMMAND ----------
 
@@ -31,6 +32,8 @@
 -- COMMAND ----------
 
 --------------------
+create table enrollments as 
+select * from parquet.`${dataset.school}/enrollments`
 
 -- COMMAND ----------
 
@@ -53,6 +56,8 @@ SELECT * FROM enrollments
 -- COMMAND ----------
 
 --------------------
+create table students as
+select * from json.`${dataset.school}/students-json`
 
 -- COMMAND ----------
 
@@ -87,7 +92,14 @@ SELECT * FROM students
 
 -- COMMAND ----------
 
+select * from csv.`${dataset.school}/courses-csv/`
+
+-- COMMAND ----------
+
 --------------------
+create or replace temporary view courses_tmp_vw (course_id string, title string, instructor string, category string, price double)
+using CSV
+options (header="true", delimiter=";",path="${dataset.school}/courses-csv")
 
 -- COMMAND ----------
 
@@ -97,6 +109,8 @@ SELECT * FROM students
 -- COMMAND ----------
 
 --------------------
+create or replace table courses as 
+select * from courses_tmp_vw
 
 -- COMMAND ----------
 
@@ -115,4 +129,4 @@ SELECT * FROM courses
 
 -- COMMAND ----------
 
-DESCRIBE EXTENDED courses
+DESCRIBE EXTENDED courses_tmp_vw

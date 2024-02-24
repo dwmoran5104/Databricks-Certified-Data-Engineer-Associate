@@ -19,7 +19,8 @@
 
 -- COMMAND ----------
 
---------------------
+create table movies_managed
+  (title STRING, category string, length float, release_date date)
 
 -- COMMAND ----------
 
@@ -50,7 +51,9 @@ DESCRIBE EXTENDED movies_managed
 
 -- COMMAND ----------
 
---------------------
+create external table actors_external 
+(actor_id int, name string, nationality string)
+location 'dbfs:/mnt/demo/actors_external'
 
 -- COMMAND ----------
 
@@ -74,7 +77,11 @@ DESCRIBE EXTENDED actors_external
 
 -- COMMAND ----------
 
---------------------
+drop table movies_managed
+
+-- COMMAND ----------
+
+-- MAGIC %fs ls 'dbfs:/user/hive/warehouse/movies_managed'
 
 -- COMMAND ----------
 
@@ -104,7 +111,16 @@ DROP TABLE actors_external
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/mnt/demo/actors_external'
+-- MAGIC %fs help
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC dbutils.fs.rm('dbfs:/mnt/demo/actors_external/', True)
+
+-- COMMAND ----------
+
+
 
 -- COMMAND ----------
 
@@ -115,7 +131,7 @@ DROP TABLE actors_external
 
 -- COMMAND ----------
 
---------------------
+create schema db_cinema
 
 -- COMMAND ----------
 
@@ -127,7 +143,7 @@ DROP TABLE actors_external
 
 -- COMMAND ----------
 
-DESCRIBE DATABASE EXTENDED db_cinema
+DESCRIBE schema EXTENDED db_cinema
 
 -- COMMAND ----------
 
@@ -137,7 +153,7 @@ DESCRIBE DATABASE EXTENDED db_cinema
 
 -- COMMAND ----------
 
---------------------
+use db_cinema;
 
 
 CREATE TABLE movies
@@ -152,7 +168,8 @@ CREATE TABLE movies
 
 -- COMMAND ----------
 
---------------------
+create schema cinema_custom
+location 'dbfs:/Shared/schemas/cinema_custom.db'
 
 -- COMMAND ----------
 

@@ -77,6 +77,11 @@ display(files)
 # COMMAND ----------
 
 # MAGIC %sql
+# MAGIC describe extended orders_updates
+
+# COMMAND ----------
+
+# MAGIC %sql
 # MAGIC DESCRIBE HISTORY orders_updates
 
 # COMMAND ----------
@@ -93,3 +98,7 @@ display(files)
 # COMMAND ----------
 
 dbutils.fs.rm("dbfs:/mnt/demo/orders_checkpoint", True)
+
+# COMMAND ----------
+
+

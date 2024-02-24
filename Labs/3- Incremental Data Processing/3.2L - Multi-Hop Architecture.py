@@ -35,13 +35,13 @@ bronze_checkpoint_path = "dbfs:/mnt/DE-Associate/checkpoints/school/bronze"
 schema_location = bronze_checkpoint_path
 
 (spark.readStream
-        .___________________
-        .___________________
-        .___________________
+        .format("cloudfiles")
+        .option("cloudfiles.format","json")
+        .option("cloudFiles.schemaLocation", schema_location)
         .load(dataset_source)
       .writeStream
-        .___________________
-        .___________________
+        .option("checkpointLocation",bronze_checkpoint_path)
+        .outputMode("append")
         .table("bronze")
 )
 
@@ -55,7 +55,7 @@ schema_location = bronze_checkpoint_path
 (spark
   .readStream
   .table("bronze")
-  .___________________("bronze_tmp"))
+  .createOrReplaceTempView("bronze_tmp"))
 
 # COMMAND ----------
 
@@ -70,7 +70,7 @@ schema_location = bronze_checkpoint_path
 
 # MAGIC %sql
 # MAGIC CREATE OR REPLACE TEMPORARY VIEW bronze_cleaned_tmp AS
-# MAGIC SELECT ___________________
+# MAGIC SELECT *, current_timestamp() as processing_time 
 # MAGIC
 
 # COMMAND ----------
