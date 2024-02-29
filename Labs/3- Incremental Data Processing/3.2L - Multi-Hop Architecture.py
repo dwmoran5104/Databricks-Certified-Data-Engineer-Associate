@@ -69,9 +69,19 @@ schema_location = bronze_checkpoint_path
 # COMMAND ----------
 
 # MAGIC %sql
+# MAGIC select * from bronze_tmp limit 1
+
+# COMMAND ----------
+
+# MAGIC %sql
 # MAGIC CREATE OR REPLACE TEMPORARY VIEW bronze_cleaned_tmp AS
-# MAGIC SELECT *, current_timestamp() as processing_time 
+# MAGIC SELECT *, current_timestamp() processing_time from bronze_tmp where quantity > 0
 # MAGIC
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from bronze_cleaned_tmp
 
 # COMMAND ----------
 
@@ -85,9 +95,10 @@ schema_location = bronze_checkpoint_path
 silver_checkpoint_path = "dbfs:/mnt/DE-Associate/checkpoints/school/silver"
 
 (spark.table("bronze_cleaned_tmp")
-        .___________________
-        .___________________
-        .___________________
+        .writeStream
+        .format("delta")
+        .option("checkpointLocation",silver_checkpoint_path)
+        .outputMode("append")
         .table("silver")
 )
 
@@ -114,7 +125,8 @@ silver_checkpoint_path = "dbfs:/mnt/DE-Associate/checkpoints/school/silver"
 
 # MAGIC %sql
 # MAGIC CREATE OR REPLACE TEMPORARY VIEW enrollments_per_student_tmp_vw AS
-# MAGIC SELECT ___________________
+# MAGIC SELECT student_id, count(enroll_id) from silver_tmp 
+# MAGIC group by student_id
 # MAGIC
 
 # COMMAND ----------
@@ -125,12 +137,22 @@ silver_checkpoint_path = "dbfs:/mnt/DE-Associate/checkpoints/school/silver"
 
 # COMMAND ----------
 
+dbutils.fs.rm(gold_checkpoint_path,True)
+
+# COMMAND ----------
+
+
+from pyspark.sql.functions import col
+
+# Replace special characters in column names
+columns = spark.table("enrollments_per_student_tmp_vw").columns
+clean_columns = [col(column).alias(column.replace(".", "_")) for column in columns]
 gold_checkpoint_path = "dbfs:/mnt/DE-Associate/checkpoints/school/gold_enrollments_stats"
 
 query = (spark.table("enrollments_per_student_tmp_vw")
               .writeStream
-              .___________________
-              .___________________
+              .outputMode("complete")
+              .option("checkpointLocation",gold_checkpoint_path)
               .table("gold_enrollments_stats"))
 
 # COMMAND ----------

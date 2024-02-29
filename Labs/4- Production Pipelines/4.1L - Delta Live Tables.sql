@@ -25,9 +25,22 @@
 
 -- COMMAND ----------
 
-CREATE ____________________
-AS SELECT * FROM cloud_files("${dataset_path}/enrollments-json-raw", "json",
+-- MAGIC %run ../Includes/Setup-Lab
+
+-- COMMAND ----------
+
+CREATE OR REFRESH STREAMING LIVE TABLE enrollments_bronze
+AS SELECT * FROM cloud_files("dbfs:/mnt/DE-Associate/dlt/school/enrollments-json-raw", "json",
                              map("cloudFiles.inferColumnTypes", "true"))
+
+-- COMMAND ----------
+
+
+
+-- COMMAND ----------
+
+set foo = 'hello';
+select ${foo}
 
 -- COMMAND ----------
 
